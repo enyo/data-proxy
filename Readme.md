@@ -1,4 +1,4 @@
-# Data proxy Version 0.0.3-dev
+# Data proxy Version 0.0.3
 
 > This proxy is still in development and unsafe to use.  
 > As soon as the version is bumped to 0.1.x it will be usable but still in beta.
