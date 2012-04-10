@@ -1,0 +1,17 @@
+{
+  "name": "data-proxy",
+  "description": "Data communication with a backend",
+  "version": "0.0.1",
+  "author": "Matias Meno <m@tias.me>",
+  "dependencies": {
+    "underscore": "1.x"
+  },
+  "devDependencies": {
+    "should": "0.x"
+  },
+  "main": "index",
+  "scripts": {
+    "test": "make test"
+  },
+  "engines": { "node": "0.x" }
+}
