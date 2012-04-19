@@ -18,10 +18,15 @@ A schema definition could look something like this:
 
     // /models/user.js
   
-    var Schema = require('data-proxy').Schema;
+    var Schema = require('data-proxy').Schema
+      , Checked = require('data-proxy').checked_types;
 
     var UserSchema = new Schema({
-        id: Number
+        id: Checked.Number // Since normally you simply insert the data submitted by a form, it can happen that a user
+                           // submits an ID referencing an entity that does not belong to her/him. To ensure that all
+                           // those are IDs are checked the «Checked.» types are used. Those attributes can't simply be
+                           // generated from a submitted String (as all other attributes are), but have to be set
+                           // programatically.
       , username_: String // The trailing _ means that it is required
       , password: String
       , $trusted: Boolean // The $ prefix means that this variable is private and should never be sent to the user
