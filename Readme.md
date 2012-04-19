@@ -54,6 +54,25 @@ And to validate and handle that model:
     // Somewhere inside your app:
     var User = require("./models/user");
 
-    // This call automatically validates the object.
+    // This call automatically validates the object and throws an exception if it's invalid.
     var user = new User({ username: "sexy82", address: { street: "Downtownstreet 37" } });
 
+If you want to handle errors differently you can pass a errorCallback:
+
+    // During initialization
+    var user = new User({ }, function(path, errorCode) {
+      // handle the error
+    });
+    // or set the data
+    var user = new User()
+      , skipValidation = false;
+
+    user.setData({ }, function(path, errorCode) { }, skipValidation);
+
+Where `path` is the path of the key/value that caused the error starting with the model name (e.g.: User.address.city),
+and `errorCode` is one of:
+
+  - `Model.INVALID_VALUE` if the object provided an invalid value
+  - `Model.INVALID_KEY` if the object provided an invalid key
+  - `Model.UNDEFINED_KEY` if a required key was not provided
+  - `Model.UNDEFINED_VALUE` if a required value was not provided
