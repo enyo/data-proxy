@@ -109,9 +109,42 @@ describe('Model', function() {
         user.setData({ address: { country: { name: "hi" } }, testValue: '' });
       }).should.throw("Validation error in 'User.testValue': Invalid Key");
 
+    });
 
+    it("should use the provided errorCallback", function() {
+      var schema = new Schema({ id_: Number, password_: String })
+        , UserModel = schema.model('User')
+        , calls
+        , errors;
+
+      errors = [];
+
+      var user = new UserModel({ }, function(path, errorCode) {
+        errors.push({ path: path, errorCode: errorCode });
+      });
+      errors.should.eql([ { path: 'User.id', errorCode: Model.UNDEFINED_KEY }, { path: 'User.password', errorCode: Model.UNDEFINED_KEY } ]);
+
+      errors = [];
+      var user = new UserModel({ id: 24 }, function(path, errorCode) {
+        errors.push({ path: path, errorCode: errorCode });
+      });
+      errors.should.eql([ { path: 'User.password', errorCode: Model.UNDEFINED_KEY } ]);
+
+      errors = [];
+      var user = new UserModel({ id: 24, password: "abc" }, function(path, errorCode) {
+        calls ++;
+      });
+      errors.should.be.empty;
+
+      calls = 0;
+      errors = [];
+      var user = new UserModel({ id: 24, password: new Date() }, function(path, errorCode) {
+        errors.push({ path: path, errorCode: errorCode });
+      });
+      errors.should.eql([ { path: 'User.password', errorCode: Model.INVALID_VALUE } ]);
 
     });
+
   });
 });
 
