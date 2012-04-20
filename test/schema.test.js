@@ -1,8 +1,8 @@
 
-var Schema = require('../lib/schema')
-  , Model = require('../lib/model')
-  , Property = require('../lib/property')
-  , Checked = require('../lib/checked_types');
+var Schema = require('../lib').Schema
+  , Model = require('../lib').Model
+  , Property = require('../lib').Property
+  , Checked = require('../lib').Checked;
 
 describe('Schema', function() {
   describe('model()', function() {

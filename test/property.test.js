@@ -1,7 +1,7 @@
 
-var Property = require('../lib/property')
+var Property = require('../lib').Property
   , _ = require('underscore')
-  , Checked = require('../lib/checked_types');
+  , Checked = require('../lib').Checked;
 
 describe('Property', function() {
   it('can be instantiated with a type in constructor', function() {

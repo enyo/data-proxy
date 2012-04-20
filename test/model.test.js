@@ -1,7 +1,7 @@
 
-var Schema = require('../lib/schema')
-  , Model = require('../lib/model')
-  , Checked = require('../lib/checked_types');
+var Schema = require('../lib').Schema
+  , Model = require('../lib').Model
+  , Checked = require('../lib').Checked;
 
 describe('Model', function() {
   it('can be properly instantiated with flat data', function() {
@@ -114,7 +114,6 @@ describe('Model', function() {
     it("should use the provided errorCallback", function() {
       var schema = new Schema({ id_: Number, password_: String })
         , UserModel = schema.model('User')
-        , calls
         , errors;
 
       errors = [];
@@ -132,11 +131,10 @@ describe('Model', function() {
 
       errors = [];
       var user = new UserModel({ id: 24, password: "abc" }, function(path, errorCode) {
-        calls ++;
+        errors.push({});
       });
       errors.should.be.empty;
 
-      calls = 0;
       errors = [];
       var user = new UserModel({ id: 24, password: new Date() }, function(path, errorCode) {
         errors.push({ path: path, errorCode: errorCode });
