@@ -2,6 +2,7 @@
 var dataProxy = require("../lib")
   , DataProxy = dataProxy.Class
   , Schema = dataProxy.Schema
+  , Model = dataProxy.Model
   , http = require("http");
   ;
 
@@ -101,6 +102,46 @@ describe('DataProxy', function() {
       writtenBody.should.eql('{"username":"test","age":26}');
 
     });
+    it("should return a doc if receiveAs is specified", function(done) {
+      var data;
+      http.request = function(options, reqCallback) {
+        var res = {
+            setEncoding: function() { },
+            headers: { 'content-type': "application/json" },
+            on: function(type, callback) {
+              switch (type) {
+                case "data":
+                  callback(data);
+                  break;
+                case "end":
+                  callback();
+                  break;
+              }
+            }
+          , end: function() { }
+          , write: function() { }
+        }
+        setTimeout(function() { reqCallback(res); }, 1);
+
+        return { on: function() { }, end: function() { }, write: function() { } }
+      };
+
+      var schema = new Schema({ username: String, age: Number });
+      var UserModel = schema.model('User');
+
+      data = '{ "username": "test", "age": "26"}';
+      
+      var dataProxy = new DataProxy();
+      dataProxy.post('/', { receiveAs: UserModel }, function(response) {
+        response.data.should.eql(data);
+        response.dataObject.should.eql({ "username": "test", "age": 26});
+        response.doc.should.be.instanceof(Model);
+        response.doc.data.should.eql({ "username": "test", "age": 26});
+        done();
+      });
+
+    });
+
     describe("JSON", function() {
       var contentType, data;
 

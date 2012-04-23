@@ -127,7 +127,7 @@ Actually post a request:
     // Example:
     dataProxy.post(
         '/path/to/post'
-      , { some: "data", to: "post", as: "json" }
+      , { body: { some: "data", to: "post", as: "json" } }
       , function(response) {
           // Success
         }
@@ -143,10 +143,28 @@ Actually post a request:
 - `response.headers` An array of the headers returned.
 - `response.data` Contains the data returned by the server.
 - `response.dataObject` (optional) Contains the parsed data (if any) returned by the server.
+- `response.doc` (optional) If you specified the `receiveAs` option.
 
 > If the `content-type` submitted by the server is  `application-json` then the data will automatically be parsed and is
 > accessible via `response.dataObject`.
 
+
+If you expect to receive a specific model, you can pass the `receiveAs` option. You will then receive the document in
+the response as `response.doc`. **The `dataObject` will then be the sanitized version of the data!**
+
+    // Example:
+    var User = require("./models/user");
+    dataProxy.post(
+        '/path/to/post'
+      , { receiveAs: User }
+      , function(response) {
+          // Success
+          // response.doc is a user document, filled with the received and sanitized data.
+        }
+      , function(err, response) {
+          // Error
+        }
+    );
 
 
 ## License
