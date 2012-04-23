@@ -130,7 +130,7 @@ Actually post a request:
     // Example:
     dataProxy.post(
         '/path/to/post'
-      , { some: "data", to: "post", as: "json" } }
+      , { some: "data", to: "post", as: "json" }
       , function(response) {
           // Success
         }
