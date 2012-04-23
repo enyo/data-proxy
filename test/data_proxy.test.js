@@ -1,6 +1,8 @@
 
 var dataProxy = require("../lib")
   , DataProxy = dataProxy.Class
+  , Schema = dataProxy.Schema
+  , Model = dataProxy.Model
   , http = require("http");
   ;
 
@@ -58,6 +60,88 @@ describe('DataProxy', function() {
       dataProxy.post('/some/path', { port: 8080, query: { a: 1, b: 'test' } });
       opts.should.eql({ host: '', port: 80, method: 'GET', path: '/prefix/some/path?a=1;b=test', headers: {} });
     });
+    it("should use the right body format", function() {
+      var opts, dataProxy, writtenBody;
+      http.request = function(options) {
+        opts = options;
+        return { on: function() { }, end: function() { }, write: function(body) { writtenBody = body; } }
+      };
+      dataProxy = new DataProxy();
+
+
+      dataProxy.post("/test", { body: { a: "test" }, bodyFormat: "plain" });
+      writtenBody.should.eql("[object Object]");
+      dataProxy.post("/test", { body: { a: "test" }, bodyFormat: "urlencoded" });
+      writtenBody.should.eql("a=test");
+      dataProxy.post("/test", { body: { a: "test" }, bodyFormat: "json" });
+      writtenBody.should.eql('{"a":"test"}');
+      dataProxy.post("/test", { body: { a: "test" } });
+      writtenBody.should.eql('{"a":"test"}');
+
+      dataProxy.post("/test", { body: "abc", bodyFormat: "plain" });
+      writtenBody.should.eql("abc");
+      dataProxy.post("/test", { body: "abc", bodyFormat: "urlencoded" });
+      writtenBody.should.eql("abc");
+      dataProxy.post("/test", { body: "abc", bodyFormat: "json" });
+      writtenBody.should.eql('"abc"');
+      dataProxy.post("/test", { body: "abc" });
+      writtenBody.should.eql('"abc"');
+
+
+      var schema = new Schema({ username: String, age: Number });
+      var UserModel = schema.model('User');
+      var user = new UserModel({ username: 'test', age: 26});
+
+      dataProxy.post("/test", { body: user, bodyFormat: "plain" });
+      writtenBody.should.eql("[object Object]");
+      dataProxy.post("/test", { body: user, bodyFormat: "urlencoded" });
+      writtenBody.should.eql("username=test&age=26");
+      dataProxy.post("/test", { body: user, bodyFormat: "json" });
+      writtenBody.should.eql('{"username":"test","age":26}');
+      dataProxy.post("/test", { body: user });
+      writtenBody.should.eql('{"username":"test","age":26}');
+
+    });
+    it("should return a doc if receiveAs is specified", function(done) {
+      var data;
+      http.request = function(options, reqCallback) {
+        var res = {
+            setEncoding: function() { },
+            headers: { 'content-type': "application/json" },
+            on: function(type, callback) {
+              switch (type) {
+                case "data":
+                  callback(data);
+                  break;
+                case "end":
+                  callback();
+                  break;
+              }
+            }
+          , end: function() { }
+          , write: function() { }
+        }
+        setTimeout(function() { reqCallback(res); }, 1);
+
+        return { on: function() { }, end: function() { }, write: function() { } }
+      };
+
+      var schema = new Schema({ username: String, age: Number });
+      var UserModel = schema.model('User');
+
+      data = '{ "username": "test", "age": "26"}';
+      
+      var dataProxy = new DataProxy();
+      dataProxy.post('/', { receiveAs: UserModel }, function(response) {
+        response.data.should.eql(data);
+        response.dataObject.should.eql({ "username": "test", "age": 26});
+        response.doc.should.be.instanceof(Model);
+        response.doc.data.should.eql({ "username": "test", "age": 26});
+        done();
+      });
+
+    });
+
     describe("JSON", function() {
       var contentType, data;
 

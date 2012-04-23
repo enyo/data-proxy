@@ -3,7 +3,7 @@ var Schema = require('../lib').Schema
   , Model = require('../lib').Model
   , Checked = require('../lib').Checked;
 
-describe('Model', function() {
+describe("Model", function() {
   it('can be properly instantiated with flat data', function() {
     var schema = new Schema({ some: Number, data: Number });
     var UserModel = schema.model('User');
@@ -25,8 +25,30 @@ describe('Model', function() {
     var user = new UserModel(data);
 
   });
+  describe("setData()", function() {
+    it("should set the sanitized values", function() {
+      var schema = new Schema({ username: String, age: Number, date: Date, active: Boolean, names: [String], stuff: [{ a: Number }] });
+      var UserModel = schema.model('User');
 
-  describe('validate()', function() {
+      var user = new UserModel();
+
+      user.setData({ username: 123, age: "38", date: "2012-01-10", active: 1, names: [123,321,"hi"], stuff: [{ a: '123' }] });
+
+      user.data.should.eql({ username: "123", age: 38, date: new Date("2012-01-10"), active: true, names: ["123", "321", "hi" ], stuff: [{ a: 123 }] });
+
+
+      var schema = new Schema(String);
+      var OneDimensionModel = schema.model('OneDimension');
+
+      var oneDimension = new OneDimensionModel();
+
+      oneDimension.setData("Test");
+      oneDimension.data.should.eql("Test");
+      oneDimension.setData(123);
+      oneDimension.data.should.eql("123");
+    });
+  });
+  describe("validate()", function() {
     it('can validate basic type properties', function() {
       var schema = new Schema({ username_: String, password_: String, name: String, date: Date, active: Boolean });
       var UserModel = schema.model('User');
