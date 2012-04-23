@@ -1,6 +1,6 @@
 # Data proxy Version 0.0.4-dev
 
-> This proxy is still in development and unsafe to use.  
+> This proxy is still in development.  
 > As soon as the version is bumped to 0.1.x it will be usable but still in beta.
 
 The data proxy is a node module that has pretty complex schema/model definition capabilities to automatically receive
@@ -9,6 +9,50 @@ and transmit data in a formatted and validated form.
 I wrote this so you can easily submit data sent from an untrusted browser form to a backend that receives trusted JSON.
 
 It helps validate that all defined properties are set and the right type, and formats the JSON correctly.
+
+
+
+I use [semantic versioning][] and my [tag script][] to tag this module.
+
+The library is fully tested with the [mocha test framework][] and the [should assertion library][]. If you contribute
+please make sure that you write tests for it.
+
+
+[semantic versioning]: http://semver.org/
+[tag script]: https://github.com/enyo/tag
+[mocha test framework]: http://visionmedia.github.com/mocha/
+[should assertion library]: https://github.com/visionmedia/should.js
+
+
+The latest **stable** version is always in the `master` branch. The `develop` branch is
+cuttin edge. Often the tests won't even completely pass. Only checkout the `develop` branch
+if you want to contribute.
+
+
+
+## Installation
+
+Simply install via [npm][]:
+
+    npm install data-proxy
+
+or download the latest manually, and put it in `node_modules`.
+
+[npm]: http://npmjs.org
+
+## Configuration
+
+Simply call `dataProxy.configure()` to configure the proxy:
+
+    var dataProxy = require("data-proxy");
+    dataProxy.configure({
+        host: '10.0.0.100'
+      , port: 80
+      , pathPrefix: '/some/path' // Without trailing slash
+      , queryStringSeparator: '&'
+    });
+
+> The `pathPrefix` should not have a trailing slash.
 
 
 ## Define your schema
@@ -76,3 +120,53 @@ and `errorCode` is one of:
   - `Model.INVALID_KEY` if the object provided an invalid key
   - `Model.UNDEFINED_KEY` if a required key was not provided
   - `Model.UNDEFINED_VALUE` if a required value was not provided
+
+
+## Usage
+
+Actually post a request:
+
+    // dataProxy.post(path, body, successCallback, errorCallback);
+    // Example:
+    dataProxy.post(
+        '/path/to/post'
+      , { some: "data", to: "post", as: "json" } }
+      , function(response) {
+          // Success
+        }
+      , function(err, response) {
+          // Error (If the server responded with 40x oder 50x, or if the JSON was invalid.)
+        }
+    );
+
+
+`response` is an object containing following information:
+
+- `response.statusCode` The http status code returned (e.g.: `404`).
+- `response.headers` An array of the headers returned.
+- `response.data` Contains the data returned by the server.
+- `response.dataObject` (optional) Contains the parsed data (if any) returned by the server.
+
+> If the `content-type` submitted by the server is  `application-json` then the data will automatically be parsed and is
+> accessible via `response.dataObject`.
+
+
+
+## License
+
+(The MIT License)
+
+Copyright (c) 2012 Matias Meno &lt;m@tias.me&gt;
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
+persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
+Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
