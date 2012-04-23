@@ -1,7 +1,7 @@
 
-var Schema = require('../lib/schema')
-  , Model = require('../lib/model')
-  , Checked = require('../lib/checked_types');
+var Schema = require('../lib').Schema
+  , Model = require('../lib').Model
+  , Checked = require('../lib').Checked;
 
 describe('Model', function() {
   it('can be properly instantiated with flat data', function() {
@@ -109,9 +109,40 @@ describe('Model', function() {
         user.setData({ address: { country: { name: "hi" } }, testValue: '' });
       }).should.throw("Validation error in 'User.testValue': Invalid Key");
 
+    });
 
+    it("should use the provided errorCallback", function() {
+      var schema = new Schema({ id_: Number, password_: String })
+        , UserModel = schema.model('User')
+        , errors;
+
+      errors = [];
+
+      var user = new UserModel({ }, function(path, errorCode) {
+        errors.push({ path: path, errorCode: errorCode });
+      });
+      errors.should.eql([ { path: 'User.id', errorCode: Model.UNDEFINED_KEY }, { path: 'User.password', errorCode: Model.UNDEFINED_KEY } ]);
+
+      errors = [];
+      var user = new UserModel({ id: 24 }, function(path, errorCode) {
+        errors.push({ path: path, errorCode: errorCode });
+      });
+      errors.should.eql([ { path: 'User.password', errorCode: Model.UNDEFINED_KEY } ]);
+
+      errors = [];
+      var user = new UserModel({ id: 24, password: "abc" }, function(path, errorCode) {
+        errors.push({});
+      });
+      errors.should.be.empty;
+
+      errors = [];
+      var user = new UserModel({ id: 24, password: new Date() }, function(path, errorCode) {
+        errors.push({ path: path, errorCode: errorCode });
+      });
+      errors.should.eql([ { path: 'User.password', errorCode: Model.INVALID_VALUE } ]);
 
     });
+
   });
 });
 
