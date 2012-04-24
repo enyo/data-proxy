@@ -102,7 +102,7 @@ describe('DataProxy', function() {
       writtenBody.should.eql('{"username":"test","age":26}');
 
     });
-    it("should return a doc if receiveAs is specified", function(done) {
+    it("should return a record if receiveAs is specified", function(done) {
       var data;
       http.request = function(options, reqCallback) {
         var res = {
@@ -135,8 +135,8 @@ describe('DataProxy', function() {
       dataProxy.post('/', { receiveAs: UserModel }, function(response) {
         response.data.should.eql(data);
         response.dataObject.should.eql({ "username": "test", "age": 26});
-        response.doc.should.be.instanceof(Model);
-        response.doc.data.should.eql({ "username": "test", "age": 26});
+        response.record.should.be.instanceof(Model);
+        response.record.data.should.eql({ "username": "test", "age": 26});
         done();
       });
 
