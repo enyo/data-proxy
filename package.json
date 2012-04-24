@@ -1,7 +1,7 @@
 {
   "name": "data-proxy",
   "description": "Data communication with a backend",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "Matias Meno <m@tias.me>",
   "dependencies": {
     "underscore": "1.x"
@@ -13,5 +13,11 @@
   "scripts": {
     "test": "make test"
   },
-  "engines": { "node": "0.x" }
+  "engines": { "node": "0.x" },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/enyo/data-proxy.git"
+  },
+  "homepage": "https://github.com/enyo/data-proxy"
+
 }
