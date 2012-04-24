@@ -13,5 +13,11 @@
   "scripts": {
     "test": "make test"
   },
-  "engines": { "node": "0.x" }
+  "engines": { "node": "0.x" },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/enyo/data-proxy.git"
+  },
+  "homepage": "https://github.com/enyo/data-proxy"
+
 }
