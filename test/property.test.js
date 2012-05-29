@@ -46,12 +46,12 @@ describe('Property', function() {
     });
   });
   describe('validate()', function() {
-    it('should accept null and undefined if required is false', function() {
+    it('should accept null and undefined if isRequired is false', function() {
       _.each([String, Date, Number, Boolean, Array, Object], function(type) {
         var prop = new Property(type, type === Array || type === Object ? {} : undefined);
         (prop.validate(null) === null).should.be.true;
         (prop.validate(undefined) === null).should.be.true;
-        prop.required = true;
+        prop.isRequired = true;
         prop.validate(null).should.equal(Property.INVALID_REQUIREMENT);
         prop.validate(undefined).should.equal(Property.INVALID_REQUIREMENT);
       });
@@ -107,9 +107,9 @@ describe('Property', function() {
 
       var timestamp = 1234567890000;
 
-      prop.validate(timestamp).should.eql(new Date(timestamp));
-      prop.validate(new Date(timestamp)).should.eql(new Date(timestamp));
-      prop.validate("2009/02/14 00:31:30").should.eql(new Date(timestamp));
+      prop.validate(timestamp).getTime().should.eql(1234567890000);
+      prop.validate(new Date(timestamp)).getTime().should.eql(1234567890000);
+      prop.validate("2009/02/14 00:31:30").getTime().should.eql(1234567890000);
       prop.validate("asdf").should.equal(Property.INVALID_VALUE);
     });
     it("should validate Arrays", function() {
