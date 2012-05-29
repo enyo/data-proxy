@@ -58,7 +58,7 @@ describe("Model", function() {
       (function() {
         user.setData({  });
       }).should.throw("Validation error in 'User.username': Undefined Key");
-      
+
       (function() {
         user.setData({ username: null });
       }).should.throw("Validation error in 'User.username': Undefined Value");

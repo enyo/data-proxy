@@ -3,6 +3,11 @@
  */
 
 /**
+ * Written in coffee script
+ */
+require("coffee-script");
+
+/**
  * Export lib/index
  */
 module.exports = require('./lib/index');
