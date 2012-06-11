@@ -67,13 +67,10 @@ class DataProxy
   # 
   # `path` The path to request with a leading slash.
   # `options` An options object for the request
-  # `successCallback` Gets the `response` object as first parameter
-  # `errorCallback` Gets `err` and `response` object as parameters. If no callback is provided a default callback is generated that simply throws the error.
-  post: (path, options, successCallback, errorCallback) ->
+  # `callback` Gets `err` and `response` object as parameters.
+  post: (path, options, callback) ->
     options = options or {}
     headers = options.headers or {}
-    errorCallback = errorCallback or (err) ->
-      throw err
 
     if options.body
       options.body = options.body.data  if options.body instanceof Model
@@ -116,22 +113,22 @@ class DataProxy
                 formattedResponse.record = new options.receiveAs(formattedResponse.dataObject)
                 formattedResponse.dataObject = formattedResponse.record.data
               catch err
-                errorCallback err, formattedResponse
+                callback err, formattedResponse
                 return
           catch err
-            errorCallback new Error("The JSON couldn't be parsed."), formattedResponse
+            callback new Error("The JSON couldn't be parsed."), formattedResponse
             return
         else if options.receiveAs
-          errorCallback new Error("Couldn't receive as " + options.receiveAs.modelName + " because response wasn't JSON."), formattedResponse
+          callback new Error("Couldn't receive as " + options.receiveAs.modelName + " because response wasn't JSON."), formattedResponse
           return
         if res.statusCode >= 400
-          errorCallback new Error("The backend returned " + res.statusCode), formattedResponse
+          callback new Error("The backend returned " + res.statusCode), formattedResponse
         else
-          successCallback formattedResponse
+          callback undefined, formattedResponse
 
     )
     req.on "error", (e) ->
-      errorCallback e
+      callback e
 
     req.write options.body if options.body
     req.end()
