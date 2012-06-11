@@ -1,4 +1,4 @@
-# Data proxy Version 0.4.1-dev
+# Data proxy Version 0.4.1
 
 
 The data proxy is a node module that has pretty complex schema/model definition capabilities to automatically receive
