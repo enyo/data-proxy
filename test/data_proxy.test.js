@@ -132,7 +132,8 @@ describe('DataProxy', function() {
       data = '{ "username": "test", "age": "26"}';
       
       var dataProxy = new DataProxy();
-      dataProxy.post('/', { receiveAs: UserModel }, function(response) {
+      dataProxy.post('/', { receiveAs: UserModel }, function(err, response) {
+        (err == undefined).should.be.ok;
         response.data.should.eql(data);
         response.dataObject.should.eql({ "username": "test", "age": 26});
         response.record.should.be.instanceof(Model);
@@ -176,7 +177,8 @@ describe('DataProxy', function() {
         data = '{ "some": "json" }';
         
         dataProxy = new DataProxy();
-        dataProxy.post('/', { }, function(response) {
+        dataProxy.post('/', { }, function(err, response) {
+          (err == undefined).should.be.ok;
           response.dataObject.should.eql({ some: 'json' });
           response.data.should.eql(data);
           done();
@@ -192,7 +194,7 @@ describe('DataProxy', function() {
         data = '{ fblal }';
         
         dataProxy = new DataProxy();
-        dataProxy.post('/', { }, null, function(err, response) {
+        dataProxy.post('/', { }, function(err, response) {
           err.message.should.equal("The JSON couldn't be parsed.");
           response.data.should.equal('{ fblal }');
           done();
@@ -208,7 +210,8 @@ describe('DataProxy', function() {
         data = '{ fblal }';
         
         dataProxy = new DataProxy();
-        dataProxy.post('/', { }, function(response) {
+        dataProxy.post('/', { }, function(err, response) {
+          (err == undefined).should.be.ok;
           response.data.should.equal('{ fblal }');
           done();
         });
