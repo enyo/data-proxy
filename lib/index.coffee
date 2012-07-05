@@ -7,6 +7,7 @@ Copyright(c) 2012 Matias Meno <m@tias.me>
 crypto = require "crypto"
 querystring = require "querystring"
 http = require "http"
+https = require "https"
 Model = require "./model"
 Schema = require "./schema"
 Property = require "./property"
@@ -35,6 +36,7 @@ class DataProxy
 
   constructor: (options) ->
     @options =
+      protocol: "http"
       host: ""
       port: 80
       pathPrefix: "" # Without trailing slash
@@ -93,7 +95,10 @@ class DataProxy
       path: (@options.pathPrefix or "") + (path or "") + queryString
       headers: headers
 
-    req = http.request(completeOptions, (res) ->
+    # Now chosing the right protocol.
+    protocol = if @options.protocol == "http" then http else https
+
+    req = protocol.request(completeOptions, (res) ->
       res.setEncoding "utf8"
       data = ""
       res.on "data", (chunk) ->
