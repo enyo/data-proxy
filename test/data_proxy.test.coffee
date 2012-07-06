@@ -18,7 +18,6 @@ describe "DataProxy", ->
       dataProxy.options.should.eql
         protocol: "http"
         host: ""
-        port: 80
         pathPrefix: ""
         queryStringSeparator: "&"
 
@@ -26,7 +25,6 @@ describe "DataProxy", ->
       dataProxy.options.should.eql
         protocol: "http"
         host: ""
-        port: 80
         pathPrefix: ""
         queryStringSeparator: "&"
 
@@ -34,7 +32,6 @@ describe "DataProxy", ->
       dataProxy.options.should.eql
         protocol: "http"
         host: "test"
-        port: 80
         pathPrefix: ""
         queryStringSeparator: "&"
 
@@ -122,6 +119,7 @@ describe "DataProxy", ->
 
     it "should use https if it has been specified as protocol", (done) ->
       https.request = (options) ->
+        options.port.should.eql 443
         done()
         return {
           on: ->

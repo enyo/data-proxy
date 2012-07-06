@@ -38,7 +38,6 @@ class DataProxy
     @options =
       protocol: "http"
       host: ""
-      port: 80
       pathPrefix: "" # Without trailing slash
       queryStringSeparator: "&"
 
@@ -88,9 +87,10 @@ class DataProxy
           options.body = JSON.stringify(options.body)
           headers["Content-Type"] = "application/json"
     queryString = (if options.query then "?" + querystring.stringify(options.query, @options.queryStringSeparator) else "")
+
     completeOptions =
       host: @options.host
-      port: @options.port
+      port: @options.port ? (if @options.protocol == "http" then 80 else 443)
       method: options.method or "GET"
       path: (@options.pathPrefix or "") + (path or "") + queryString
       headers: headers
