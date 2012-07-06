@@ -80,10 +80,10 @@ class DataProxy
         when "plain"
           options.body = options.body.toString()
         when "urlencoded"
-          options.body = querystring.stringify(options.body)
+          options.body = querystring.stringify options.body
           headers["Content-Type"] = "application/x-www-form-urlencoded"
         else # json
-          options.body = JSON.stringify(options.body)
+          options.body = JSON.stringify options.body
           headers["Content-Type"] = "application/json"
     queryString = (if options.query then "?" + querystring.stringify(options.query, @options.queryStringSeparator) else "")
 
@@ -94,7 +94,7 @@ class DataProxy
       path: (@options.pathPrefix or "") + (path or "") + queryString
       headers: headers
 
-    # Now chosing the right protocol.
+    # Now choosing the right protocol.
     protocol = if @options.protocol == "http" then http else https
 
     req = protocol.request(completeOptions, (res) ->
