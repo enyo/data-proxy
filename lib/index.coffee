@@ -38,7 +38,6 @@ class DataProxy
     @options =
       protocol: "http"
       host: ""
-      port: 80
       pathPrefix: "" # Without trailing slash
       queryStringSeparator: "&"
 
@@ -65,7 +64,7 @@ class DataProxy
   # - `bodyFormat` String One of: `plain`, `urlencoded` or `json`. The proxy will take the provided body object and transform
   # it accordingly. Defaults to `json`.
   # - `query` Object An object containing query parameters to be transferred in the path
-  # - `headers` Object An object containing additional headers. If `body` is provided, the `Content-type` header will automatically be overwritten.
+  # - `headers` Object An object containing additional headers. If `body` is provided, the `Content-type` header will automatically be overwritten for urlencoded an JSON.
   # 
   # `path` The path to request with a leading slash.
   # `options` An options object for the request
@@ -75,27 +74,27 @@ class DataProxy
     headers = options.headers or {}
 
     if options.body
-      options.body = options.body.data  if options.body instanceof Model
+      options.body = options.body.data if options.body instanceof Model
       options.method = "POST"
       switch options.bodyFormat
         when "plain"
           options.body = options.body.toString()
-          headers["Content-Type"] = "text/plain"
         when "urlencoded"
-          options.body = querystring.stringify(options.body)
+          options.body = querystring.stringify options.body
           headers["Content-Type"] = "application/x-www-form-urlencoded"
         else # json
-          options.body = JSON.stringify(options.body)
+          options.body = JSON.stringify options.body
           headers["Content-Type"] = "application/json"
     queryString = (if options.query then "?" + querystring.stringify(options.query, @options.queryStringSeparator) else "")
+
     completeOptions =
       host: @options.host
-      port: @options.port
+      port: @options.port ? (if @options.protocol == "http" then 80 else 443)
       method: options.method or "GET"
       path: (@options.pathPrefix or "") + (path or "") + queryString
       headers: headers
 
-    # Now chosing the right protocol.
+    # Now choosing the right protocol.
     protocol = if @options.protocol == "http" then http else https
 
     req = protocol.request(completeOptions, (res) ->

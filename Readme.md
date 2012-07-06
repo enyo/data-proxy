@@ -1,4 +1,4 @@
-# Data proxy Version 0.4.3
+# Data proxy Version 0.4.4
 
 
 The data proxy is a node module that has pretty complex schema/model definition capabilities to automatically receive
@@ -44,7 +44,8 @@ Simply call `dataProxy.configure()` to configure the proxy:
     var dataProxy = require("data-proxy");
     dataProxy.configure({
         host: '10.0.0.100'
-      , port: 80
+      , protocol: 'https'
+      , port: 443
       , pathPrefix: '/some/path' // Without trailing slash
       , queryStringSeparator: '&'
     });
