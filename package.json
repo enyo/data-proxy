@@ -1,7 +1,7 @@
 {
   "name": "data-proxy",
   "description": "Data communication with a backend",
-  "version": "0.4.4-dev",
+  "version": "0.4.4",
   "author": "Matias Meno <m@tias.me>",
   "dependencies": {
     "coffee-script": "1.x",
