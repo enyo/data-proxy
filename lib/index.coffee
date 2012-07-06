@@ -74,7 +74,7 @@ class DataProxy
     headers = options.headers or {}
 
     if options.body
-      options.body = options.body.data  if options.body instanceof Model
+      options.body = options.body.data if options.body instanceof Model
       options.method = "POST"
       switch options.bodyFormat
         when "plain"
