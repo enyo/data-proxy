@@ -24,7 +24,7 @@ class Model
       @data = data
     else
       sanitizedData = @validate(errorCallback, data)
-      sanitizedData = null  if sanitizedData instanceof Property.INVALID
+      sanitizedData = null if sanitizedData instanceof Property.INVALID
       @data = sanitizedData
 
   

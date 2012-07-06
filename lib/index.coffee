@@ -64,7 +64,7 @@ class DataProxy
   # - `bodyFormat` String One of: `plain`, `urlencoded` or `json`. The proxy will take the provided body object and transform
   # it accordingly. Defaults to `json`.
   # - `query` Object An object containing query parameters to be transferred in the path
-  # - `headers` Object An object containing additional headers. If `body` is provided, the `Content-type` header will automatically be overwritten.
+  # - `headers` Object An object containing additional headers. If `body` is provided, the `Content-type` header will automatically be overwritten for urlencoded an JSON.
   # 
   # `path` The path to request with a leading slash.
   # `options` An options object for the request
@@ -79,7 +79,6 @@ class DataProxy
       switch options.bodyFormat
         when "plain"
           options.body = options.body.toString()
-          headers["Content-Type"] = "text/plain"
         when "urlencoded"
           options.body = querystring.stringify(options.body)
           headers["Content-Type"] = "application/x-www-form-urlencoded"
