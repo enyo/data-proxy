@@ -48,6 +48,7 @@ Simply call `dataProxy.configure()` to configure the proxy:
       , port: 443
       , pathPrefix: '/some/path' // Without trailing slash
       , queryStringSeparator: '&'
+      , debug: false
     });
 
 > The `pathPrefix` should not have a trailing slash.
