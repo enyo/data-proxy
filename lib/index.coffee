@@ -40,6 +40,7 @@ class DataProxy
       host: ""
       pathPrefix: "" # Without trailing slash
       queryStringSeparator: "&"
+      debug: off
 
     @configure options if options?
 
@@ -93,6 +94,8 @@ class DataProxy
       method: options.method or "GET"
       path: (@options.pathPrefix or "") + (path or "") + queryString
       headers: headers
+
+    console.log completeOptions if @options.debug
 
     # Now choosing the right protocol.
     protocol = if @options.protocol == "http" then http else https

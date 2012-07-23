@@ -1,4 +1,4 @@
-# Data proxy Version 0.4.4
+# Data proxy Version 0.4.5
 
 
 The data proxy is a node module that has pretty complex schema/model definition capabilities to automatically receive
@@ -48,6 +48,7 @@ Simply call `dataProxy.configure()` to configure the proxy:
       , port: 443
       , pathPrefix: '/some/path' // Without trailing slash
       , queryStringSeparator: '&'
+      , debug: false
     });
 
 > The `pathPrefix` should not have a trailing slash.
