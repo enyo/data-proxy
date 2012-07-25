@@ -95,7 +95,8 @@ class DataProxy
       path: (@options.pathPrefix or "") + (path or "") + queryString
       headers: headers
 
-    console.log completeOptions if @options.debug
+    console.log "REQUEST ==> \n", completeOptions if @options.debug
+    console.log "BODY ==> \n", options.body if @options.debug and options.body
 
     # Now choosing the right protocol.
     protocol = if @options.protocol == "http" then http else https
