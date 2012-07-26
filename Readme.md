@@ -129,13 +129,13 @@ Actually post a request:
     // Example:
     dataProxy.post(
         '/path/to/post'
-      , { body: { some: "data", to: "post", as: "json" } }
-      , function(response) {
-          // Success
-        }
-      , function(err, response) {
-          // Error (If the server responded with 40x oder 50x, or if the JSON was invalid.)
-        }
+      , { body: { some: "data", to: "post", as: "json" } })
+    .then(function(response) {
+      // Success
+    })
+    .fail(function(err) {
+      // Error (If the server responded with 40x oder 50x, or if the JSON was invalid.)
+      // The server response is inside `err.response`
     );
 
 
@@ -158,15 +158,14 @@ the response as `response.record`. **The `dataObject` will then be the sanitized
     var User = require("./models/user");
     dataProxy.post(
         '/path/to/post'
-      , { receiveAs: User }
-      , function(response) {
-          // Success
-          // response.record is a user document, filled with the received and sanitized data.
-        }
-      , function(err, response) {
-          // Error
-        }
-    );
+      , { receiveAs: User })
+    .then(function(response) {
+      // Success
+      // response.record is a user document, filled with the received and sanitized data.
+    })
+    .fail(function(err) {
+      // Error
+    });
 
 
 ## License

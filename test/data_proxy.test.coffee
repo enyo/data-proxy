@@ -319,7 +319,7 @@ describe "DataProxy", ->
         dataProxy = new DataProxy()
         dataProxy.post("/", {}).fail (err) ->
           err.message.should.equal "The JSON couldn't be parsed."
-          err.formattedResponse.data.should.equal "{ fblal }"
+          err.response.data.should.equal "{ fblal }"
           done()
 
 
