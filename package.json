@@ -1,11 +1,12 @@
 {
   "name": "data-proxy",
   "description": "Data communication with a backend",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "author": "Matias Meno <m@tias.me>",
   "dependencies": {
     "coffee-script": "1.x",
-    "underscore": "1.x"
+    "underscore": "1.x",
+    "q": "0.x"
   },
   "devDependencies": {
     "should": "0.x"

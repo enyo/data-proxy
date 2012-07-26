@@ -104,7 +104,7 @@ class DataProxy
 
     handleError = (err, formattedResponse) ->
       err = new Error err if typeof err == "string"
-      err.formattedResponse = formattedResponse
+      err.response = formattedResponse
       deferred.reject err
 
     req = protocol.request(completeOptions, (res) ->
