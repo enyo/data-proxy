@@ -20,6 +20,7 @@ describe "DataProxy", ->
         host: ""
         pathPrefix: ""
         queryStringSeparator: "&"
+        debug: false
 
       dataProxy = new DataProxy({})
       dataProxy.options.should.eql
@@ -27,6 +28,7 @@ describe "DataProxy", ->
         host: ""
         pathPrefix: ""
         queryStringSeparator: "&"
+        debug: false
 
       dataProxy = new DataProxy(host: "test")
       dataProxy.options.should.eql
@@ -34,6 +36,7 @@ describe "DataProxy", ->
         host: "test"
         pathPrefix: ""
         queryStringSeparator: "&"
+        debug: false
 
       dataProxy = new DataProxy(
         protocol: "https"
@@ -41,6 +44,7 @@ describe "DataProxy", ->
         port: 8080
         pathPrefix: "/hi"
         queryStringSeparator: ";"
+        debug: yes
       )
       dataProxy.options.should.eql
         protocol: "https"
@@ -48,6 +52,7 @@ describe "DataProxy", ->
         port: 8080
         pathPrefix: "/hi"
         queryStringSeparator: ";"
+        debug: yes
 
 
     it "should be configurable with configure()", ->
@@ -67,6 +72,7 @@ describe "DataProxy", ->
         port: 8080
         pathPrefix: "/hi"
         queryStringSeparator: ";"
+        debug: no
 
 
 
@@ -250,10 +256,8 @@ describe "DataProxy", ->
       UserModel = schema.model("User")
       data = "{ \"username\": \"test\", \"age\": \"26\"}"
       dataProxy = new DataProxy()
-      dataProxy.post "/",
-        receiveAs: UserModel
-      , (err, response) ->
-        (err is `undefined`).should.be.ok
+      dataProxy.post("/", receiveAs: UserModel)
+      .then (response) ->
         response.data.should.eql data
         response.dataObject.should.eql
           username: "test"
@@ -302,21 +306,20 @@ describe "DataProxy", ->
         contentType = "application/json"
         data = "{ \"some\": \"json\" }"
         dataProxy = new DataProxy()
-        dataProxy.post "/", {}, (err, response) ->
-          (err is `undefined`).should.be.ok
+        dataProxy.post("/", {}).then (response) ->
           response.dataObject.should.eql some: "json"
           response.data.should.eql data
           done()
 
 
-      it "should call the errorCallback if the JSON is incorrect", (done) ->
+      it "should call the error callback if the JSON is incorrect", (done) ->
         http.request = request
         contentType = "application/json"
         data = "{ fblal }"
         dataProxy = new DataProxy()
-        dataProxy.post "/", {}, (err, response) ->
+        dataProxy.post("/", {}).fail (err) ->
           err.message.should.equal "The JSON couldn't be parsed."
-          response.data.should.equal "{ fblal }"
+          err.formattedResponse.data.should.equal "{ fblal }"
           done()
 
 
@@ -325,8 +328,7 @@ describe "DataProxy", ->
         contentType = "text/plain"
         data = "{ fblal }"
         dataProxy = new DataProxy()
-        dataProxy.post "/", {}, (err, response) ->
-          (err is `undefined`).should.be.ok
+        dataProxy.post("/", {}).then (response) ->
           response.data.should.equal "{ fblal }"
           done()
 
