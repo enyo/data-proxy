@@ -12,7 +12,7 @@ Model = require "./model"
 Schema = require "./schema"
 Property = require "./property"
 Checked = require "./checked_types"
-
+Q = require "q"
 
 
 
@@ -69,8 +69,7 @@ class DataProxy
   # 
   # `path` The path to request with a leading slash.
   # `options` An options object for the request
-  # `callback` Gets `err` and `response` object as parameters.
-  post: (path, options, callback) ->
+  post: (path, options) ->
     options = options or {}
     headers = options.headers or {}
 
@@ -101,6 +100,13 @@ class DataProxy
     # Now choosing the right protocol.
     protocol = if @options.protocol == "http" then http else https
 
+    deferred = Q.defer()
+
+    handleError = (err, formattedResponse) ->
+      err = new Error err if typeof err == "string"
+      err.formattedResponse = formattedResponse
+      deferred.reject err
+
     req = protocol.request(completeOptions, (res) ->
       res.setEncoding "utf8"
       data = ""
@@ -121,18 +127,19 @@ class DataProxy
                 formattedResponse.record = new options.receiveAs(formattedResponse.dataObject)
                 formattedResponse.dataObject = formattedResponse.record.data
               catch err
-                callback err, formattedResponse
+                handleError err, formattedResponse
                 return
           catch err
-            callback new Error("The JSON couldn't be parsed."), formattedResponse
+            handleError "The JSON couldn't be parsed.", formattedResponse
             return
         else if options.receiveAs
-          callback new Error("Couldn't receive as " + options.receiveAs.modelName + " because response wasn't JSON."), formattedResponse
+          handleError "Couldn't receive as " + options.receiveAs.modelName + " because response wasn't JSON.", formattedResponse
           return
+
         if res.statusCode >= 400
-          callback new Error("The backend returned " + res.statusCode), formattedResponse
+          handleError "The backend returned " + res.statusCode, formattedResponse
         else
-          callback undefined, formattedResponse
+          deferred.resolve formattedResponse
 
     )
     req.on "error", (e) ->
@@ -140,6 +147,9 @@ class DataProxy
 
     req.write options.body if options.body
     req.end()
+
+    # Return the promise
+    deferred.promise
 
 
 # Exposing the proxy.
