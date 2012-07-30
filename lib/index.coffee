@@ -143,7 +143,7 @@ class DataProxy
 
     )
     req.on "error", (e) ->
-      callback e, { statusCode: 400, headers: [], data: null }
+      handleError e, { statusCode: 400, headers: [], data: null }
 
     req.write options.body if options.body
     req.end()
