@@ -1,5 +1,4 @@
 Checked = require("../lib/checked_types")
-_ = require("underscore")
 
 describe "CheckedType", ->
   describe "String", ->

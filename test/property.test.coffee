@@ -1,5 +1,4 @@
 Property = require("../lib").Property
-_ = require("underscore")
 Checked = require("../lib").Checked
 describe "Property", ->
   it("can be instantiated with a type in constructor", ->
@@ -43,7 +42,7 @@ describe "Property", ->
 
   describe "validate()", ->
     it "should accept null and undefined if isRequired is false", ->
-      _.each [ String, Date, Number, Boolean, Array, Object ], (type) ->
+      for type in [ String, Date, Number, Boolean, Array, Object ]
         prop = new Property(type, (if type is Array or type is Object then {} else `undefined`))
         (prop.validate(null) is null).should.be["true"]
         (prop.validate(`undefined`) is null).should.be["true"]

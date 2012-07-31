@@ -5,7 +5,6 @@
   "author": "Matias Meno <m@tias.me>",
   "dependencies": {
     "coffee-script": "1.x",
-    "underscore": "1.x",
     "q": "0.x"
   },
   "devDependencies": {

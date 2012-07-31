@@ -5,7 +5,6 @@ Copyright(c) 2012 Matias Meno <m@tias.me>
 # Dependencies
 Model = require("./model")
 Property = require("./property")
-_ = require("underscore")
 Checked = require("./checked_types")
 
 
@@ -61,7 +60,7 @@ class Schema
   _parseObjectOfValues: (definition) ->
     self = this
     child = {}
-    _.each definition, (value, key) ->
+    for key, value of definition
       isRequired = false
       isPrivate = false
       if key.charAt(key.length - 1) is "_"
