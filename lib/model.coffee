@@ -3,7 +3,6 @@ Copyright(c) 2012 Matias Meno <m@tias.me>
 ###
 
 # Dependencies
-_ = require("underscore")
 Property = require("./property")
 
 
@@ -56,12 +55,12 @@ class Model
         providedKeys = Object.keys(value)
         
         # Now lets actually go through each index and validate it.
-        _.each property.child, (childProperty, key) ->
+        for own key, childProperty of property.child
           childValue = value[key]
           childPath = path + "." + key
           unless key of value
             errorCallback childPath, Model.UNDEFINED_KEY  if errorCallback  if childProperty.isRequired
-            return # Continue loop
+            continue
           
           # Remove the key
           providedKeys.splice providedKeys.indexOf(key), 1
@@ -72,7 +71,7 @@ class Model
             
             # No need to call the error callback since _validateRecursive has been called with the childValue, and throws
             # the exception if necessary.
-            return # Continue loop
+            continue
           
           # TODO: make it configurable to leave null values
           if childValue is null
@@ -80,15 +79,14 @@ class Model
           else
             value[key] = childValue
 
-        _.each providedKeys, (invalidKey) ->
+        for invalidKey in providedKeys
           delete value[invalidKey]
-
           errorCallback path + "." + invalidKey, Model.INVALID_KEY  if errorCallback
 
       else if property.type is Array
         
         # Now lets iterate through the array and check every element.
-        _.each value, (arrayValue, i) ->
+        for arrayValue, i in value
           value[i] = self._validateRecursive(arrayValue, property.child, errorCallback, path + "." + i)
 
       else
