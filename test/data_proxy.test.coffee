@@ -21,6 +21,7 @@ describe "DataProxy", ->
         pathPrefix: ""
         queryStringSeparator: "&"
         debug: false
+        charset: "utf-8"
 
       dataProxy = new DataProxy({})
       dataProxy.options.should.eql
@@ -29,6 +30,7 @@ describe "DataProxy", ->
         pathPrefix: ""
         queryStringSeparator: "&"
         debug: false
+        charset: "utf-8"
 
       dataProxy = new DataProxy(host: "test")
       dataProxy.options.should.eql
@@ -37,15 +39,17 @@ describe "DataProxy", ->
         pathPrefix: ""
         queryStringSeparator: "&"
         debug: false
+        charset: "utf-8"
 
-      dataProxy = new DataProxy(
+      dataProxy = new DataProxy
         protocol: "https"
         host: "test"
         port: 8080
         pathPrefix: "/hi"
         queryStringSeparator: ";"
         debug: yes
-      )
+        charset: "ISO-666"
+
       dataProxy.options.should.eql
         protocol: "https"
         host: "test"
@@ -53,6 +57,7 @@ describe "DataProxy", ->
         pathPrefix: "/hi"
         queryStringSeparator: ";"
         debug: yes
+        charset: "ISO-666"
 
 
     it "should be configurable with configure()", ->
@@ -65,6 +70,7 @@ describe "DataProxy", ->
         port: 8080
         pathPrefix: "/hi"
         queryStringSeparator: ";"
+        charset: "ISO-666"
 
       dataProxy.options.should.eql
         protocol: "https"
@@ -73,6 +79,7 @@ describe "DataProxy", ->
         pathPrefix: "/hi"
         queryStringSeparator: ";"
         debug: no
+        charset: "ISO-666"
 
 
 
