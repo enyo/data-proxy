@@ -41,6 +41,7 @@ class DataProxy
       pathPrefix: "" # Without trailing slash
       queryStringSeparator: "&"
       debug: off
+      charset: "utf-8"
 
     @configure options if options?
 
@@ -79,12 +80,13 @@ class DataProxy
       switch options.bodyFormat
         when "plain"
           options.body = options.body.toString()
+          headers["Content-Type"] = "text/plain; charset=#{@options.charset}"
         when "urlencoded"
           options.body = querystring.stringify options.body
-          headers["Content-Type"] = "application/x-www-form-urlencoded"
+          headers["Content-Type"] = "application/x-www-form-urlencoded; charset=#{@options.charset}"
         else # json
           options.body = JSON.stringify options.body
-          headers["Content-Type"] = "application/json"
+          headers["Content-Type"] = "application/json; charset=; charset=#{@options.charset}"
     queryString = (if options.query then "?" + querystring.stringify(options.query, @options.queryStringSeparator) else "")
 
     completeOptions =
