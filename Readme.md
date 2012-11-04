@@ -1,6 +1,9 @@
 # Data proxy Version 0.5.6-dev
 
 
+![Build status](https://travis-ci.org/enyo/data-proxy.png)
+
+
 The data proxy is a node module that has pretty complex schema/model definition capabilities to automatically receive
 and transmit data in a formatted and validated form.
 
