@@ -127,7 +127,7 @@ class DataProxy
           headers: res.headers
           data: data
 
-        if res.headers["content-type"].indexOf("application/json") is 0
+        if res.headers?["content-type"] and res.headers["content-type"].indexOf("application/json") is 0
           try
             formattedResponse.dataObject = JSON.parse(formattedResponse.data)
             if options.receiveAs

@@ -8,7 +8,9 @@
     "q": "0.x"
   },
   "devDependencies": {
-    "should": "0.x"
+    "mocha": "*",
+    "coffee-script": "*",
+    "should": "*"
   },
   "main": "index",
   "scripts": {

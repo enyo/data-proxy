@@ -21,6 +21,7 @@ describe "DataProxy", ->
         pathPrefix: ""
         queryStringSeparator: "&"
         debug: false
+        defaultContentType: 'application/json'
         charset: "utf-8"
 
       dataProxy = new DataProxy({})
@@ -30,6 +31,7 @@ describe "DataProxy", ->
         pathPrefix: ""
         queryStringSeparator: "&"
         debug: false
+        defaultContentType: 'application/json'
         charset: "utf-8"
 
       dataProxy = new DataProxy(host: "test")
@@ -39,6 +41,7 @@ describe "DataProxy", ->
         pathPrefix: ""
         queryStringSeparator: "&"
         debug: false
+        defaultContentType: 'application/json'
         charset: "utf-8"
 
       dataProxy = new DataProxy
@@ -48,6 +51,7 @@ describe "DataProxy", ->
         pathPrefix: "/hi"
         queryStringSeparator: ";"
         debug: yes
+        defaultContentType: 'application/json'
         charset: "ISO-666"
 
       dataProxy.options.should.eql
@@ -57,6 +61,7 @@ describe "DataProxy", ->
         pathPrefix: "/hi"
         queryStringSeparator: ";"
         debug: yes
+        defaultContentType: 'application/json'
         charset: "ISO-666"
 
 
@@ -70,6 +75,7 @@ describe "DataProxy", ->
         port: 8080
         pathPrefix: "/hi"
         queryStringSeparator: ";"
+        defaultContentType: 'application/json'
         charset: "ISO-666"
 
       dataProxy.options.should.eql
@@ -79,6 +85,7 @@ describe "DataProxy", ->
         pathPrefix: "/hi"
         queryStringSeparator: ";"
         debug: no
+        defaultContentType: 'application/json'
         charset: "ISO-666"
 
 
@@ -100,7 +107,8 @@ describe "DataProxy", ->
         port: 80
         method: "GET"
         path: "/"
-        headers: {}
+        headers:
+          'Content-Type': 'application/json; charset=utf-8'
 
       opts = {}
       dataProxy = new DataProxy()
@@ -110,7 +118,8 @@ describe "DataProxy", ->
         port: 80
         method: "GET"
         path: "/some/path"
-        headers: {}
+        headers:
+          'Content-Type': 'application/json; charset=utf-8'
 
       opts = {}
       dataProxy = new DataProxy()
@@ -127,7 +136,8 @@ describe "DataProxy", ->
         port: 80
         method: "GET"
         path: "/prefix/some/path?a=1;b=test"
-        headers: {}
+        headers:
+          'Content-Type': 'application/json; charset=utf-8'
 
 
     it "should use https if it has been specified as protocol", (done) ->
