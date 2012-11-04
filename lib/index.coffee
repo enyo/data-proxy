@@ -41,6 +41,7 @@ class DataProxy
       pathPrefix: "" # Without trailing slash
       queryStringSeparator: "&"
       debug: off
+      defaultContentType: "application/json" # If no content type or bodyFormat is provided.
       charset: "utf-8"
 
     @configure options if options?
@@ -66,7 +67,7 @@ class DataProxy
   # - `bodyFormat` String One of: `plain`, `urlencoded` or `json`. The proxy will take the provided body object and transform
   # it accordingly. Defaults to `json`.
   # - `query` Object An object containing query parameters to be transferred in the path
-  # - `headers` Object An object containing additional headers. If `body` is provided, the `Content-type` header will automatically be overwritten for urlencoded an JSON.
+  # - `headers` Object An object containing additional headers. The `Content-Type` header will automatically be overwritten. To set it use the `contentType` option.
   # 
   # `path` The path to request with a leading slash.
   # `options` An options object for the request
@@ -74,19 +75,24 @@ class DataProxy
     options = options or {}
     headers = options.headers or {}
 
+    contentType = options.contentType ? @options.defaultContentType
+
     if options.body
       options.body = options.body.data if options.body instanceof Model
       options.method = "POST"
       switch options.bodyFormat
         when "plain"
           options.body = options.body.toString()
-          headers["Content-Type"] = "text/plain; charset=#{@options.charset}"
+          contentType = "text/plain" unless options.contentType?
         when "urlencoded"
           options.body = querystring.stringify options.body
-          headers["Content-Type"] = "application/x-www-form-urlencoded; charset=#{@options.charset}"
+          contentType = "application/x-www-form-urlencoded" unless options.contentType?
         else # json
           options.body = JSON.stringify options.body
-          headers["Content-Type"] = "application/json; charset=; charset=#{@options.charset}"
+          contentType = "application/json" unless options.contentType?
+
+    headers["Content-Type"] = "#{contentType}; charset=#{@options.charset}"
+
     queryString = (if options.query then "?" + querystring.stringify(options.query, @options.queryStringSeparator) else "")
 
     completeOptions =
@@ -121,7 +127,7 @@ class DataProxy
           headers: res.headers
           data: data
 
-        if res.headers["content-type"].indexOf("application/json") is 0
+        if res.headers?["content-type"] and res.headers["content-type"].indexOf("application/json") is 0
           try
             formattedResponse.dataObject = JSON.parse(formattedResponse.data)
             if options.receiveAs

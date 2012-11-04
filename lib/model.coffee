@@ -59,7 +59,7 @@ class Model
           childValue = value[key]
           childPath = path + "." + key
           unless key of value
-            errorCallback childPath, Model.UNDEFINED_KEY  if errorCallback  if childProperty.isRequired
+            errorCallback childPath, Model.UNDEFINED_KEY  if errorCallback  and childProperty.isRequired
             continue
           
           # Remove the key
