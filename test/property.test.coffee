@@ -102,7 +102,7 @@ describe "Property", ->
       timestamp = 1234567890000
       prop.validate(timestamp).getTime().should.eql 1234567890000
       prop.validate(new Date(timestamp)).getTime().should.eql 1234567890000
-      prop.validate("2009/02/14 00:31:30").getTime().should.eql 1234567890000
+      prop.validate("2009/02/14 00:31:30 GMT+0100").getTime().should.eql 1234567890000
       prop.validate("asdf").should.equal Property.INVALID_VALUE
 
     it "should validate Arrays", ->
